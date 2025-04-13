@@ -1,0 +1,14 @@
+﻿<Window x:Class="SimplexMethodApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Simplex Method" Height="450" Width="600">
+    <Grid>
+        <TextBox Name="TextBoxA" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="250" Height="30"/>
+        <TextBox Name="TextBoxB" HorizontalAlignment="Left" Margin="270,10,0,0" VerticalAlignment="Top" Width="250" Height="30"/>
+        <TextBox Name="TextBoxC" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="250" Height="30"/>
+
+        <Button Name="SolveButton" Content="Solve" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="30" Margin="10,90,0,0" Click="SolveButton_Click"/>
+
+        <TextBox Name="ResultTextBox" HorizontalAlignment="Left" Margin="10,130,0,0" VerticalAlignment="Top" Width="500" Height="150" IsReadOnly="True"/>
+    </Grid>
+</Window>
