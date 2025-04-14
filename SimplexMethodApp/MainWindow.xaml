@@ -8,6 +8,8 @@
         <TextBox Name="TextBoxC" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="250" Height="30"/>
 
         <Button Name="SolveButton" Content="Solve" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="30" Margin="10,90,0,0" Click="SolveButton_Click"/>
+        <Button Name="LoadButton" Content="Load Data" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="30" Margin="100,90,0,0" Click="LoadButton_Click"/>
+        <Button Name="SaveButton" Content="Save Result" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="30" Margin="200,90,0,0" Click="SaveButton_Click"/>
 
         <TextBox Name="ResultTextBox" HorizontalAlignment="Left" Margin="10,130,0,0" VerticalAlignment="Top" Width="500" Height="150" IsReadOnly="True"/>
     </Grid>

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Windows;
+using Microsoft.Win32;
 
 namespace SimplexMethodApp
 {
@@ -9,6 +11,83 @@ namespace SimplexMethodApp
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        // Метод для загрузки данных из файла
+        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text files (*.txt)|*.txt";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    var lines = File.ReadAllLines(openFileDialog.FileName);
+
+                    // Загрузка матрицы A
+                    TextBoxA.Text = lines[0];
+
+                    // Загрузка вектора b
+                    TextBoxB.Text = lines[1];
+
+                    // Загрузка вектора c
+                    TextBoxC.Text = lines[2];
+
+                    MessageBox.Show("Данные успешно загружены!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка загрузки файла: " + ex.Message);
+                }
+            }
+        }
+
+        // Метод для сохранения входных данных и результатов в файл
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Text files (*.txt)|*.txt";
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    // Получаем входные данные
+                    string aData = TextBoxA.Text;
+                    string bData = TextBoxB.Text;
+                    string cData = TextBoxC.Text;
+
+                    // Получаем результат
+                    string result = ResultTextBox.Text;
+
+                    // Сохраняем данные в файл
+                    using (StreamWriter writer = new StreamWriter(saveFileDialog.FileName))
+                    {
+                        // Сохраняем матрицу A
+                        writer.WriteLine("Матрица A:");
+                        writer.WriteLine(aData);
+
+                        // Сохраняем вектор b
+                        writer.WriteLine("Вектор b:");
+                        writer.WriteLine(bData);
+
+                        // Сохраняем вектор c
+                        writer.WriteLine("Вектор c:");
+                        writer.WriteLine(cData);
+
+                        // Сохраняем результат
+                        writer.WriteLine("Результат:");
+                        writer.WriteLine(result);
+                    }
+
+                    MessageBox.Show("Данные и результат успешно сохранены!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка сохранения файла: " + ex.Message);
+                }
+            }
         }
 
         private void SolveButton_Click(object sender, RoutedEventArgs e)
