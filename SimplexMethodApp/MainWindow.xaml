@@ -3,14 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Simplex Method" Height="450" Width="600">
     <Grid>
-        <TextBox Name="TextBoxA" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="250" Height="30"/>
-        <TextBox Name="TextBoxB" HorizontalAlignment="Left" Margin="270,10,0,0" VerticalAlignment="Top" Width="250" Height="30"/>
-        <TextBox Name="TextBoxC" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="250" Height="30"/>
+        <Label Content="Матрица A (строки через ';', элементы через ','):" Margin="10,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="25" Width="400" />
+        <TextBox Name="TextBoxA" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Width="550" Height="30"/>
 
-        <Button Name="SolveButton" Content="Solve" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="30" Margin="10,90,0,0" Click="SolveButton_Click"/>
-        <Button Name="LoadButton" Content="Load Data" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="30" Margin="100,90,0,0" Click="LoadButton_Click"/>
-        <Button Name="SaveButton" Content="Save Result" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="30" Margin="200,90,0,0" Click="SaveButton_Click"/>
+        <Label Content="Вектор b (через ';'):" Margin="10,50,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox Name="TextBoxB" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top" Width="550" Height="30"/>
 
-        <TextBox Name="ResultTextBox" HorizontalAlignment="Left" Margin="10,130,0,0" VerticalAlignment="Top" Width="500" Height="150" IsReadOnly="True"/>
+        <Label Content="Вектор c (через ';'):" Margin="10,100,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBox Name="TextBoxC" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Width="550" Height="30"/>
+
+        <Button Name="LoadButton" Content="Загрузить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,160,0,0" Click="LoadButton_Click"/>
+        <Button Name="SaveButton" Content="Сохранить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="120,160,0,0" Click="SaveButton_Click"/>
+        <Button Name="SolveButton" Content="Решить" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="230,160,0,0" Click="SolveButton_Click"/>
+
+        <TextBox Name="ResultTextBox" HorizontalAlignment="Left" Margin="10,200,0,0" VerticalAlignment="Top" Width="550" Height="180" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"/>
     </Grid>
 </Window>

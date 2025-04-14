@@ -13,7 +13,7 @@ namespace SimplexMethodApp
             InitializeComponent();
         }
 
-        // Метод для загрузки данных из файла
+        // Загрузка данных
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -24,16 +24,13 @@ namespace SimplexMethodApp
                 try
                 {
                     var lines = File.ReadAllLines(openFileDialog.FileName);
-
-                    // Загрузка матрицы A
                     TextBoxA.Text = lines[0];
-
-                    // Загрузка вектора b
                     TextBoxB.Text = lines[1];
-
-                    // Загрузка вектора c
                     TextBoxC.Text = lines[2];
-
+                    if (lines.Length > 3)
+                    {
+                        ResultTextBox.Text = string.Join(Environment.NewLine, lines.Skip(3));
+                    }
                     MessageBox.Show("Данные успешно загружены!");
                 }
                 catch (Exception ex)
@@ -43,7 +40,7 @@ namespace SimplexMethodApp
             }
         }
 
-        // Метод для сохранения входных данных и результатов в файл
+        // Сохранение данных и результата
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -53,34 +50,8 @@ namespace SimplexMethodApp
             {
                 try
                 {
-                    // Получаем входные данные
-                    string aData = TextBoxA.Text;
-                    string bData = TextBoxB.Text;
-                    string cData = TextBoxC.Text;
-
-                    // Получаем результат
-                    string result = ResultTextBox.Text;
-
-                    // Сохраняем данные в файл
-                    using (StreamWriter writer = new StreamWriter(saveFileDialog.FileName))
-                    {
-                        // Сохраняем матрицу A
-                        writer.WriteLine("Матрица A:");
-                        writer.WriteLine(aData);
-
-                        // Сохраняем вектор b
-                        writer.WriteLine("Вектор b:");
-                        writer.WriteLine(bData);
-
-                        // Сохраняем вектор c
-                        writer.WriteLine("Вектор c:");
-                        writer.WriteLine(cData);
-
-                        // Сохраняем результат
-                        writer.WriteLine("Результат:");
-                        writer.WriteLine(result);
-                    }
-
+                    string content = $"{TextBoxA.Text}\n{TextBoxB.Text}\n{TextBoxC.Text}\n\nРезультат:\n{ResultTextBox.Text}";
+                    File.WriteAllText(saveFileDialog.FileName, content);
                     MessageBox.Show("Данные и результат успешно сохранены!");
                 }
                 catch (Exception ex)
@@ -94,30 +65,25 @@ namespace SimplexMethodApp
         {
             try
             {
-                // Получаем данные с текстовых полей
                 string[] AStrings = TextBoxA.Text.Split(';');
                 string[] bStrings = TextBoxB.Text.Split(';');
                 string[] cStrings = TextBoxC.Text.Split(';');
 
-                // Проверка: матрица A
                 int m = AStrings.Length;
                 int n = AStrings[0].Split(',').Length;
 
-                // Проверка: размерность вектора b
                 if (bStrings.Length != m)
                 {
                     MessageBox.Show($"Количество строк в A ({m}) не совпадает с размерностью вектора b ({bStrings.Length})");
                     return;
                 }
 
-                // Проверка: размерность вектора c
                 if (cStrings.Length != n)
                 {
                     MessageBox.Show($"Количество столбцов в A ({n}) не совпадает с размерностью вектора c ({cStrings.Length})");
                     return;
                 }
 
-                // Создание матрицы A
                 double[,] A = new double[m, n];
                 for (int i = 0; i < m; i++)
                 {
@@ -128,24 +94,11 @@ namespace SimplexMethodApp
                     }
                 }
 
-                // Создание вектора b
-                double[] b = new double[m];
-                for (int i = 0; i < m; i++)
-                {
-                    b[i] = double.Parse(bStrings[i]);
-                }
+                double[] b = bStrings.Select(double.Parse).ToArray();
+                double[] c = cStrings.Select(double.Parse).ToArray();
 
-                // Создание вектора c
-                double[] c = new double[n];
-                for (int i = 0; i < n; i++)
-                {
-                    c[i] = double.Parse(cStrings[i]);
-                }
-
-                // Решение задачи с помощью метода Симплекса
                 var result = SimplexMethod(A, b, c);
 
-                // Вывод результата
                 ResultTextBox.Text = $"Оптимальное решение: {string.Join(", ", result.Item1)}\n";
                 ResultTextBox.Text += $"Значение целевой функции: {result.Item2}";
             }
@@ -155,40 +108,25 @@ namespace SimplexMethodApp
             }
         }
 
-        // Метод решения задачи методом Симплекса
+        // Симплекс-метод
         public Tuple<double[], double> SimplexMethod(double[,] A, double[] b, double[] c)
         {
             int m = b.Length;
             int n = c.Length;
-
-            // Инициализация симплекс-таблицы
             double[,] tableau = new double[m + 1, n + m + 1];
 
-            // Заполнение столбца правых частей
             for (int i = 0; i < m; i++)
-            {
                 tableau[i, n + m] = b[i];
-            }
 
-            // Заполнение таблицы для A
             for (int i = 0; i < m; i++)
-            {
                 for (int j = 0; j < n; j++)
-                {
                     tableau[i, j] = A[i, j];
-                }
-            }
 
-            // Заполнение целевой функции (с учетом знака)
             for (int i = 0; i < n; i++)
-            {
-                tableau[m, i] = -c[i]; // Минус для максимизации
-            }
+                tableau[m, i] = -c[i];
 
-            // Симплексный метод
             while (true)
             {
-                // Поиск столбца с наибольшим отрицательным значением в последней строке
                 int pivotCol = -1;
                 double minVal = 0;
                 for (int i = 0; i < n + m; i++)
@@ -200,9 +138,8 @@ namespace SimplexMethodApp
                     }
                 }
 
-                if (pivotCol == -1) break; // Оптимальное решение найдено
+                if (pivotCol == -1) break;
 
-                // Поиск строки для поворота
                 int pivotRow = -1;
                 double minRatio = double.MaxValue;
                 for (int i = 0; i < m; i++)
@@ -218,12 +155,11 @@ namespace SimplexMethodApp
                     }
                 }
 
-                // Поворот таблицы
+                if (pivotRow == -1) throw new Exception("Решение не существует (нерациональное или неограниченное).");
+
                 double pivot = tableau[pivotRow, pivotCol];
                 for (int i = 0; i < n + m + 1; i++)
-                {
                     tableau[pivotRow, i] /= pivot;
-                }
 
                 for (int i = 0; i < m + 1; i++)
                 {
@@ -231,31 +167,25 @@ namespace SimplexMethodApp
                     {
                         double factor = tableau[i, pivotCol];
                         for (int j = 0; j < n + m + 1; j++)
-                        {
                             tableau[i, j] -= factor * tableau[pivotRow, j];
-                        }
                     }
                 }
             }
 
-            // Извлечение решения из таблицы
             double[] solution = new double[n];
-            for (int i = 0; i < n; i++)
-            {
-                solution[i] = 0;
-            }
-
             for (int i = 0; i < m; i++)
             {
-                if (tableau[i, n + m] != 0)
+                for (int j = 0; j < n; j++)
                 {
-                    solution[i] = tableau[i, n + m];
+                    if (Math.Abs(tableau[i, j] - 1) < 1e-6 && Enumerable.Range(0, m).Count(x => Math.Abs(tableau[x, j]) > 1e-6) == 1)
+                    {
+                        solution[j] = tableau[i, n + m];
+                        break;
+                    }
                 }
             }
 
-            // Целевая функция
             double objectiveValue = tableau[m, n + m];
-
             return Tuple.Create(solution, objectiveValue);
         }
     }
